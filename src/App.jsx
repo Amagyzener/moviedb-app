@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-
 import { Tabs, Input, Row, Col, Pagination, Spin, Alert, Empty } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 const { TabPane } = Tabs;
 
 import MovieDB_API from './MovieDB_API';
 import { MovieDB_Provider } from './MovieDB_context';
-
 import MovieCard from './components/MovieCard';
 import NetworkDetector from './hoc/NetworkDetector';
 import _debounce from './_debounce';
