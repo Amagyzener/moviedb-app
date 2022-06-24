@@ -37,12 +37,17 @@
 			2,
 			{
 				"groups": [
-					"builtin",
-					"external",
-					"internal",
-					"parent",
-					"sibling",
-					"index"
+					[
+						"builtin",
+						"external"
+					],
+					[
+						"parent",
+						"internal",
+						"sibling",
+						"index",
+						"unknown"
+					]
 				],
 				"newlines-between": "always"
 			}

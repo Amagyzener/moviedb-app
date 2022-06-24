@@ -47,7 +47,7 @@ export default class MovieCard extends Component {
 
 		let lastSpace = text.lastIndexOf('\u0020');
 		for (let char = lastSpace; char >= 0; lastSpace--)
-			if (!'.,!?:;\u0020\u2013\u2014\u2026\-'.includes(text[--char])) break;
+			if (!'.,!?:;-\u0020\u2013\u2014\u2026'.includes(text[--char])) break;
 		// дополнительная обрезка до границы целого слова
 		if (!options.strict && lastSpace > 0) text = text.slice(0, lastSpace);
 		return text + options.tail;
