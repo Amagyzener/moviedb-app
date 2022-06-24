@@ -22,9 +22,13 @@
 	},
 	"plugins": ["react", "prettier", "import"],
 	"rules": {
-		"indent": ["error", "tab"],
-		"prettier/prettier": "error",
-		"quotes": ["error", "single"],
+		"indent": ["warn", "tab"],
+		"prettier/prettier": [
+			"warn", {
+				"endOfLine": "auto"
+      	}
+		],
+		"quotes": ["warn", "single"],
 		"react/react-in-jsx-scope": "off",
 		"react/prop-types": 0,
 		"import/no-unresolved": [2, { "caseSensitive": false }],
