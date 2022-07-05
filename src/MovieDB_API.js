@@ -7,21 +7,28 @@ export default class MovieDB_API {
 	static #api = 'https://api.themoviedb.org/3';
 	static #api_key = 'c16d261278a8e5c8f3c4067195f5530d';
 
+	static async #fetchData(request) { // : Object<JSON>
+		const data = await fetch(request);
+		if (!data.ok) throw new Error(`Couldn’t fetch "${data.url}" (status ${data.status})`);
+		return data.json();
+	}
+
+
 	static async getMovies(count, query = 'return', page = 1) { // : Array
 		if (!query) return [];
-		const data = await fetch(`${this.#api}/search/movie?api_key=${this.#api_key}&query=${query}&page=${page}`);
-		if (!data.ok) throw new Error(`Couldn’t fetch "${data.url}" (status ${data.status})`);
-		const json = await data.json();
+		const json = await this.#fetchData(`${this.#api}/search/movie?api_key=${this.#api_key}&query=${query}&page=${page}`);
 		//console.warn(json);
 		return [json.results.slice(0, count), json.total_pages * 10];
 	}
 
 	static async getGenres() { // : Array
-		const data = await fetch(`${this.#api}/genre/movie/list?api_key=${this.#api_key}`);
-		if (!data.ok) throw new Error(`Couldn’t fetch "${data.url}" (status ${data.status})`);
-		const json = await data.json();
+		const json = await this.#fetchData(`${this.#api}/genre/movie/list?api_key=${this.#api_key}`);
 		//console.warn(json.genres);
 		return json.genres;
+	}
+
+	static async getExtId(id) { // : string
+		return await this.#fetchData(`https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${this.#api_key}`);
 	}
 
 	static async findByIds(ids, page) { // : Array
@@ -32,14 +39,7 @@ export default class MovieDB_API {
 		}
 
 		for (const id of ids) {
-			const extId = await fetch(`https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${this.#api_key}`);
-			if (!extId.ok) throw new Error(`Couldn’t fetch "${extId.url}" (status ${extId.status})`);
-			let json = await extId.json();
-
-			const data = await fetch(`https://api.themoviedb.org/3/find/${json.imdb_id}?api_key=${this.#api_key}&language=en-US&external_source=imdb_id`);
-			if (!data.ok) throw new Error(`Couldn’t fetch "${data.url}" (status ${data.status})`);
-			json = await data.json();
-
+			const json = await this.#fetchData(`https://api.themoviedb.org/3/find/${id}?api_key=${this.#api_key}&language=en-US&external_source=imdb_id`);
 			movies.push(json.movie_results[0]);
 		}
 		//console.warn(movies, movies.length, Math.ceil(movies.length / 6) * 10);

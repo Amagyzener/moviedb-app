@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Rate } from 'antd';
 
+import MovieDB_API from '../MovieDB_API';
+import { MovieDB_Consumer } from '../MovieDB_context';
+
 import 'antd/dist/antd.css';
 import './MovieCard.css';
-import { MovieDB_Consumer } from '../MovieDB_context';
 
 
 export default class MovieCard extends Component {
@@ -55,8 +57,15 @@ export default class MovieCard extends Component {
 
 	handleRateChange = (n, id) => {
 		console.warn('Rated', n, 'on movie with id', id);
-		localStorage.setItem(id, n);
 		this.setState({ stars: n });
+		MovieDB_API.getExtId(id).then((extId) => {
+			// запись внешнего IMDB id фильма в хранилище
+			localStorage.setItem(extId.imdb_id, true);
+			// запись внутреннего id (для сохранения оценок и избежания большого количества запросов в 'MovieDB_API.findByIds()')
+			localStorage.setItem(id, n);
+		}).catch(() => {
+			alert('Failed to rate the movie. Please, try again');
+		});
 	}
 
 	render() {

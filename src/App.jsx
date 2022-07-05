@@ -64,7 +64,8 @@ class App extends Component {
 
 	showRated(page = 1) {
 		const rated = []; // number[]: movie ids
-		for (let i = 0; i < localStorage.length; i++) rated.push(+localStorage.key(i));
+		for (let i = 0; i < localStorage.length; i++)
+			if (!+localStorage.key(i)) rated.push(localStorage.key(i)); // добавление в массив только внешних IMDB id
 
 		MovieDB_API.findByIds(rated, page)
 			.then(([items, pages]) => {
